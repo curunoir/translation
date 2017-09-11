@@ -2,7 +2,6 @@
     "name": "curunoir/translation",
     "minimum-stability": "dev",
     "description": "Translations tools for Laravel applications",
-    "tags": ["lang", "translation", "translate", "localization", "localize", "laravel"],
     "license": "MIT",
     "authors": [
         {
@@ -11,7 +10,6 @@
         }
     ],
     "require": {
-        "php": ">=5.5.9",
         "illuminate/database": "5.*",
         "illuminate/support": "5.*",
         "stevebauman/translation": "^1.3"
