@@ -11,7 +11,7 @@
     ],
     "require": {
         "illuminate/database": "5.*",
-        "illuminate/support": "5.*"",
+        "illuminate/support": "5.*",
         "stichoza/google-translate-php": "~3.2.7",
         "guzzlehttp/guzzle": "~6.0"
     },
