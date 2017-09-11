@@ -17,7 +17,7 @@
     },
     "autoload": {
         "psr-4": {
-            "curunoir\\translation\\": "src"
+            "curunoir\\translation\\": "src/"
         }
     }
 }
