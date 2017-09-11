@@ -1,6 +1,7 @@
 <?php
 namespace curunoir\translation;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Blade;
 
 
 class TranslationServiceProvider extends ServiceProvider
