@@ -1,5 +1,6 @@
 {
     "name": "curunoir/translation",
+    "minimum-stability": "dev",
     "description": "Translations tools for Laravel applications",
     "tags": ["lang", "translation", "translate", "localization", "localize", "laravel"],
     "license": "MIT",
