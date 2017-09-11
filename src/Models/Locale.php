@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace curunoir\translation\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Stevebauman\Translation\Models\Locale as SLocale;

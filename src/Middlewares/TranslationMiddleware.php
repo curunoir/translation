@@ -1,6 +1,6 @@
 <?php
 
-namespace curunoir\translation\\Middlewares;
+namespace curunoir\translation\Middlewares;
 
 use Carbon\Carbon;
 use Closure;

@@ -1,14 +1,18 @@
 {
     "name": "curunoir/translation",
     "description": "Translations tools for Laravel applications",
-    "type": "library",
+    "tags": ["lang", "translation", "translate", "localization", "localize", "laravel"],
+    "license": "MIT",
     "authors": [
         {
-            "name": "Alan",
-            "email": "alan.legroux@bluemega.com"
+            "name": "Alan Legroux",
+            "email": "alan.legroux@gmail.com"
         }
     ],
     "require": {
+        "php": ">=5.5.9",
+        "illuminate/database": "5.*",
+        "illuminate/support": "5.*",
         "stevebauman/translation": "^1.3"
     },
     "autoload": {

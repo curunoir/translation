@@ -1,15 +1,11 @@
 <?php
 
-namespace App\Models;
+namespace curunoir\translation\Models;
 
-use App\Behaviour\CommonClass;
-use App\Behaviour\CommonModel;
 use Stevebauman\Translation\Models\Translation as STrans;
 
 class Translation extends STrans
 {
-
-    use CommonClass;
     protected $fillable = [
         'locale_id',
         'translation_id',

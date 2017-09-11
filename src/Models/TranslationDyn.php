@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Models;
+namespace curunoir\translation\Models;
 
-use App\Behaviour\CommonClass;
 use Illuminate\Database\Eloquent\Model;
 
 class TranslationDyn extends Model
 {
     public $table = "translationsdyn";
     private static $_instance = [];
-    use CommonClass;
+
     public $fillable = [
         'locale_id',
         'translationsdyn_id',

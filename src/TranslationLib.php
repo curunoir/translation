@@ -2,18 +2,18 @@
 
 namespace curunoir\translation;
 
-use curunoir\translation\Models\Translation;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Stevebauman\Translation\Models\Locale;
+
+use curunoir\translation\Models\Translation;
+use curunoir\translation\Models\Locale;
 use Stichoza\GoogleTranslate\TranslateClient;
 
 class TranslationLib
 {
+    private $_instance = [];
 
-    private static $_instance = [];
-
-    public static function getCacheTrad($lang) {
+    public function getCacheTrad($lang) {
 
         if(!isset(self::$_instance[$lang])) {
             self::$_instance[$lang] = self::cacheTrad($lang);
@@ -22,9 +22,8 @@ class TranslationLib
         return self::$_instance[$lang];
     }
 
-    public static function addTrad($text, $lang)
+    public function addTrad($text, $lang)
     {
-        //DB::setFetchMode(\PDO::FETCH_OBJ);
         $locale = DB::table('locales')
             ->where('code', $lang)
             ->first();
@@ -109,7 +108,7 @@ class TranslationLib
         endif;
     }
 
-    public static function cacheTrad($lang)
+    public function cacheTrad($lang)
     {
         if (env('DEV')):
             return \Illuminate\Support\Facades\Cache::remember('translations_dev_' . $lang,20, function () use ($lang) {

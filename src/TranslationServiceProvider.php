@@ -20,9 +20,12 @@ class TranslationServiceProvider extends SBTServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(Translation::class, function () {
-            return new Translation();
+        $this->app->singleton(TranslationLib::class, function () {
+            return new TranslationLib();
         });
-        $this->app->alias(Translation::class, 'translation');
+        $this->app->alias(TranslationLib::class, 'translationlib');
+
+        // Include the helpers file for global `trad()` function
+        include __DIR__.'/helpers_translation.php';
     }
 }
