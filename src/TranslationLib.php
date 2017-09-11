@@ -15,11 +15,11 @@ class TranslationLib
 
     public function getCacheTrad($lang) {
 
-        if(!isset(self::$_instance[$lang])) {
-            self::$_instance[$lang] = self::cacheTrad($lang);
+        if(!isset($this->_instance[$lang])) {
+            $this->_instance[$lang] = $this->cacheTrad($lang);
         }
 
-        return self::$_instance[$lang];
+        return $this->_instance[$lang];
     }
 
     public function addTrad($text, $lang)
@@ -114,7 +114,8 @@ class TranslationLib
             return \Illuminate\Support\Facades\Cache::remember('translations_dev_' . $lang,20, function () use ($lang) {
                 $tmp = \Illuminate\Support\Facades\DB::table('translations');
                 if ($lang) {
-                    $locale_id = \Stevebauman\Translation\Models\Locale::where('code', $lang)->first()->id;
+
+                    $locale_id = Locale::where('code', $lang)->first()->id;
                 } else {
                     $locale_id = 1;
                 }
