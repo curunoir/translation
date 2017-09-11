@@ -44,7 +44,7 @@ class TranslationLib
                 $gT = new TranslateClient();
                 $gT->setSource('fr');
                 $gT->setTarget($lang);
-                dd($text);
+
                 try {
                     $textTrad = $gT->translate(mb_convert_encoding($text, 'UTF-8', 'HTML-ENTITIES'));
                     $newT = new Translation();
