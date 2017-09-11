@@ -2,7 +2,6 @@
 
 namespace curunoir\translation\Middlewares;
 
-use Carbon\Carbon;
 use Closure;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;

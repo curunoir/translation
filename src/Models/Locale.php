@@ -3,13 +3,32 @@
 namespace curunoir\translation\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Stevebauman\Translation\Models\Locale as SLocale;
 
-class Locale extends SLocale
+class Locale extends Model
 {
+
+    /**
+     * The fillable locale attributes.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'code',
+        'lang_code',
+        'name',
+        'display_name',
+    ];
+
     private static $_instance = [];
     public static $_lang = null;
 
+    /**
+     * {@inheritdoc].
+     */
+    public function translations()
+    {
+        return $this->hasMany(Translation::class);
+    }
 
     public function getIsoDateAttribute(){
         return str_replace('-','_',$this->iso).'.utf-8';

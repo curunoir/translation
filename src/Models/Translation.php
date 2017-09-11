@@ -1,10 +1,9 @@
 <?php
 
 namespace curunoir\translation\Models;
+use Illuminate\Database\Eloquent\Model;
 
-use Stevebauman\Translation\Models\Translation as STrans;
-
-class Translation extends STrans
+class Translation extends Model
 {
     protected $fillable = [
         'locale_id',
@@ -13,6 +12,13 @@ class Translation extends STrans
         'slug',
         'context'
     ];
+
+    /**
+     * The locale translations table.
+     *
+     * @var string
+     */
+    protected $table = 'translations';
 
     public function child()
     {
@@ -28,6 +34,18 @@ class Translation extends STrans
     {
         $this->attributes['translation'] = ucfirst($trans);
         $this->attributes['slug'] = str_slug($trans,'_');
+    }
+
+
+    public function locale()
+    {
+        return $this->belongsTo(Locale::class);
+    }
+
+
+    public function parent()
+    {
+        return $this->belongsTo(self::class, $this->getForeignKey());
     }
 
 
