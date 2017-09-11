@@ -3,7 +3,7 @@ namespace curunoir\translation;
 use Illuminate\Support\ServiceProvider;
 
 
-class TranslationServiceProvider
+class TranslationServiceProvider extends ServiceProvider
 {
 
     /**
@@ -12,7 +12,7 @@ class TranslationServiceProvider
      * @var bool
      */
     protected $defer = false;
-    
+
     /**
      * Bootstrap the application services.
      *
