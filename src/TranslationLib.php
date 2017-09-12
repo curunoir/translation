@@ -11,7 +11,13 @@ use Stichoza\GoogleTranslate\TranslateClient;
 
 class TranslationLib
 {
+
     private $_instance = [];
+
+    public function __construct()
+    {
+        $_instance = [];
+    }
 
     public function getCacheTrad($lang) {
 

@@ -32,14 +32,14 @@ class TranslationServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton('translationlib', function () {
+        $this->app->singleton('translationlib', function ($app) {
             return new TranslationLib();
         });
 
         // Allow migrations to be publishable.
-        $this->publishes([
-            __DIR__.'/Migrations/' => base_path('/database/migrations'),
-        ], 'migrations');
+        //$this->publishes([
+        //    __DIR__.'/Migrations/' => base_path('/database/migrations'),
+        //], 'migrations');
 
         // Include the helpers file for global `trad()` function
         //include __DIR__.'/helpers_translation.php';
