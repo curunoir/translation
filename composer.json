@@ -19,9 +19,22 @@
         "stichoza/google-translate-php": "~3.2.7",
         "guzzlehttp/guzzle": "~6.0"
     },
+    "require-dev": {
+        "orchestra/testbench": "3.4.x",
+        "mockery/mockery": "^0.9.4",
+        "phpunit/phpunit": "~4|~5"
+    },
+    "archive": {
+        "exclude": ["/tests"]
+    },
     "autoload": {
         "psr-4": {
             "curunoir\\translation\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "curunoir\\translation\\Tests\\": "tests/"
         }
     }
 }
