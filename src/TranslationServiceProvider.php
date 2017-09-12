@@ -22,7 +22,7 @@ class TranslationServiceProvider extends ServiceProvider
     public function boot()
     {
         Blade::directive('t', function ($args) {
-            return "<?php echo App::make('translation')->translate{$args}; ?>";
+            return "<?php echo App::make('translationlib')->getCacheTrad{$args}; ?>";
         });
     }
     /**
@@ -32,10 +32,9 @@ class TranslationServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(TranslationLib::class, function () {
+        $this->app->singleton('translationlib', function () {
             return new TranslationLib();
         });
-        $this->app->alias(TranslationLib::class, 'translationlib');
 
         // Allow migrations to be publishable.
         $this->publishes([
@@ -43,6 +42,6 @@ class TranslationServiceProvider extends ServiceProvider
         ], 'migrations');
 
         // Include the helpers file for global `trad()` function
-        include __DIR__.'/helpers_translation.php';
+        //include __DIR__.'/helpers_translation.php';
     }
 }
