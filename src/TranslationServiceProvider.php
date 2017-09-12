@@ -42,6 +42,6 @@ class TranslationServiceProvider extends ServiceProvider
         ], 'migrations');
 
         // Include the helpers file for global `trad()` function
-        //include __DIR__.'/helpers_translation.php';
+        include __DIR__.'/helpers_translation.php';
     }
 }
