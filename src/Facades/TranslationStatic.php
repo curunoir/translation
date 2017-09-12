@@ -3,7 +3,7 @@
 namespace curunoir\translation\Facades;
 use Illuminate\Support\Facades\Facade;
 
-class Translation extends Facade
+class TranslationStatic extends Facade
 {
     /**
      * The facade accessor for retrieving translation from the IoC.
@@ -12,6 +12,6 @@ class Translation extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'translationlib';
+        return 'translationstatic';
     }
 }
