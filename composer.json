@@ -5,6 +5,10 @@
     "license": "MIT",
     "authors": [
         {
+            "name": "Damien Louvard",
+            "email": "contact@damien-louvard.fr"
+        },
+        {
             "name": "Alan Legroux",
             "email": "alan.legroux@gmail.com"
         }
