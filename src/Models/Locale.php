@@ -27,7 +27,7 @@ class Locale extends Model
      */
     public function translations()
     {
-        return $this->hasMany(Translation::class);
+        return $this->hasMany(TranslationStatic::class);
     }
 
     public function getIsoDateAttribute(){

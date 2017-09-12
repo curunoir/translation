@@ -3,7 +3,7 @@
 namespace curunoir\translation\Models;
 use Illuminate\Database\Eloquent\Model;
 
-class Translation extends Model
+class TranslationStatic extends Model
 {
     protected $fillable = [
         'locale_id',

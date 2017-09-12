@@ -2,7 +2,7 @@
 namespace curunoir\translation;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Blade;
-
+use curunoir\translation\Contracts\Translation as TranslationInterface;
 
 class TranslationServiceProvider extends ServiceProvider
 {
@@ -22,7 +22,7 @@ class TranslationServiceProvider extends ServiceProvider
     public function boot()
     {
         Blade::directive('t', function ($args) {
-            return "<?php echo App::make('translationlib')->getCacheTrad{$args}; ?>";
+            return "<?php echo App::make('translationstatic')->translate{$args}; ?>";
         });
     }
     /**
@@ -32,14 +32,22 @@ class TranslationServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton('translationlib', function ($app) {
-            return new TranslationLib();
-        });
+        // Allow configuration to be publishable.
+        $this->publishes([
+            __DIR__.'/Config/config.php' => config_path('translation.php'),
+        ], 'config');
 
         // Allow migrations to be publishable.
         $this->publishes([
             __DIR__.'/Migrations/' => base_path('/database/migrations'),
         ], 'migrations');
+
+        $this->app->singleton('translationstatic', function ($app) {
+            return new TranslationStatic($this->app);
+        });
+
+        // Bind translation contract to IoC.
+        $this->app->bind(TranslationInterface::class, 'translationstatic');
 
         // Include the helpers file for global `trad()` function
         include __DIR__.'/helpers_translation.php';
