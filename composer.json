@@ -22,6 +22,9 @@
     "autoload": {
         "psr-4": {
             "curunoir\\translation\\": "src/"
-        }
+        },
+        "files": [
+            "src/helpers_translation.php"
+        ]
     }
 }
