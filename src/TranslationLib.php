@@ -12,6 +12,11 @@ use Stichoza\GoogleTranslate\TranslateClient;
 class TranslationLib
 {
 
+    /*
+     * Array of Collections of objects
+     * Each Collection represents the cache for a lang
+     * The objects of the Collections are database translations with 'content' and 'translation' fields
+     */
     private $_instance = [];
 
     public function __construct()
@@ -19,15 +24,82 @@ class TranslationLib
         $_instance = [];
     }
 
-    public function getCacheTrad($lang) {
-
-        if(!isset($this->_instance[$lang])) {
+    /**
+     * Retrieves the cache of a lang
+     * @param $lang The lang of the cache we're searching for
+     * @return Collection
+     */
+    public function getCacheTrad($lang)
+    {
+        if(!isset($this->_instance[$lang]))
             $this->_instance[$lang] = $this->cacheTrad($lang);
-        }
-
         return $this->_instance[$lang];
     }
 
+    /**
+     * Retrieves the cache of a lang or creates it from the database
+     * @param $lang The lang of the cache we're searching for
+     * @return Collection
+     */
+    public function cacheTrad($lang)
+    {
+        // If DEV environment we don't use encryption
+        if (env('DEV')):
+            return \Illuminate\Support\Facades\Cache::remember('translations_dev_' . $lang, 20, function () use ($lang) {
+
+                $tmp = \Illuminate\Support\Facades\DB::table('translations');
+                if ($lang) {
+                    $found_locale = Locale::where('code', $lang)->first();
+                    if($found_locale)
+                        $locale_id = Locale::where('code', $lang)->first()->id;
+                    else
+                        $locale_id = 1;
+                } else {
+                    $locale_id = 1;
+                }
+
+                $tmp->rightjoin('translations as tlang', 'translations.id', '=', 'tlang.translation_id')
+                    ->select('translations.translation as translation', 'tlang.translation as content')
+                    ->where('tlang.locale_id', $locale_id);
+
+                return $tmp->get();
+            });
+
+        else: //production
+
+            return \Illuminate\Support\Facades\Cache::remember('translations_' . $lang,20, function () use ($lang){
+                $locale = Locale::where('code',$lang)->first();
+                $l = collect(Translation::getFileNoCrypt('translations'));
+
+                $localeSource = Locale::where('code','fr')->first();
+                $source = $l->filter(function($item) use($locale,$localeSource){
+                    return $item->locale_id==$localeSource->id;
+                });
+
+                $target = $l->filter(function($item) use($locale){
+                    return $item->locale_id==$locale->id;
+                });
+
+                $translations = $target->map(function($item) use ($source){
+                    $s = $source->filter(function($el) use($item){
+                        return $el->id == $item->translation_id;
+                    })->first();
+                    $item->content = $item->translation;
+                    $item->translation = $s->translation;
+
+                    return $item;
+                });
+                return $translations;
+            });
+        endif;
+    }
+
+    /**
+     * Add a translation on database and cache entry and returns it
+     * @param $text
+     * @param $lang
+     * @return mixed|string
+     */
     public function addTrad($text, $lang)
     {
         $locale = DB::table('locales')
@@ -39,7 +111,6 @@ class TranslationLib
             ->first();
 
         if ($source):
-
             $trad = $source->child()
                 ->where('locale_id', $locale->id)
                 ->first();
@@ -111,57 +182,6 @@ class TranslationLib
                 }
             endif;
 
-        endif;
-    }
-
-    public function cacheTrad($lang)
-    {
-        if (env('DEV')):
-            return \Illuminate\Support\Facades\Cache::remember('translations_dev_' . $lang,20, function () use ($lang) {
-                $tmp = \Illuminate\Support\Facades\DB::table('translations');
-                if ($lang) {
-
-                    $locale_id = Locale::where('code', $lang)->first()->id;
-                } else {
-                    $locale_id = 1;
-                }
-
-                $tmp->rightjoin('translations as tlang', 'translations.id', '=', 'tlang.translation_id')
-                    ->select('translations.translation as translation', 'tlang.translation as content')
-                    ->where('tlang.locale_id', $locale_id);
-
-                return $tmp->get();
-            });
-
-        else://production
-
-            return \Illuminate\Support\Facades\Cache::remember('translations_' . $lang,20, function () use ($lang){
-                $locale = Locale::where('code',$lang)->first();
-                $l = collect(Translation::getFileNoCrypt('translations'));
-
-                $localeSource = Locale::where('code','fr')->first();
-                $source = $l->filter(function($item) use($locale,$localeSource){
-                    return $item->locale_id==$localeSource->id;
-                });
-
-                $target = $l->filter(function($item) use($locale){
-                    return $item->locale_id==$locale->id;
-                });
-
-                $translations = $target->map(function($item) use ($source){
-                    $s = $source->filter(function($el) use($item){
-                        return $el->id == $item->translation_id;
-                    })->first();
-                    $item->content = $item->translation;
-                    $item->translation = $s->translation;
-
-
-                    return $item;
-                });
-
-                return $translations;
-
-            });
         endif;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Config;
+use \curunoir\translation\Models\Locale;
 
 if (!function_exists('trad')) {
     /**
@@ -16,7 +16,8 @@ if (!function_exists('trad')) {
         // Le singleton du package
         $translationLib = App::make('translationlib');
 
-        if (\curunoir\translation\Models\Locale::$_lang) $lang = \curunoir\translation\Models\Locale::$_lang;
+        if (Locale::$_lang)
+            $lang = \curunoir\translation\Models\Locale::$_lang;
 
         if ($lang == null):
             $lang = session('code') ? session('code') : 'fr';
@@ -26,17 +27,20 @@ if (!function_exists('trad')) {
             return $slug;
         endif;
 
-        $value = $translationLib->getCacheTrad($lang);
-        $value = env('DEV') ? collect($value) : $value;
-        $res = $value->filter(function ($t) use ($slug) {
+        $cache = $translationLib->getCacheTrad($lang);
+        $cache = env('DEV') ? collect($cache) : $cache;
+        // filters the Collection cache to find the translated $slug content
+        $res = $cache->filter(function ($t) use ($slug) {
             return $t->translation == $slug;
         })->first();
 
         $line = $res ? $res->content : null;
 
         if ($line == ''):
+            // If not found, the $slug will be translated
             $line = env('DEV') ? $translationLib->addTrad($slug, $lang) : $slug;
         endif;
+
         if (!empty($parameters)):
             foreach ($parameters as $key => $value):
                 $line = str_replace(':' . $key, $value, $line);
