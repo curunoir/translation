@@ -20,6 +20,8 @@ class CreateLocalesTable extends Migration
             $table->string('lang_code')->nullable();
             $table->string('name')->nullable();
             $table->string('display_name')->nullable();
+            $table->boolean('activ')->default(1);
+            $table->string('iso')->nullable();
         });
     }
 

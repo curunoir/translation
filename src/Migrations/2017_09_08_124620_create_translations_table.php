@@ -19,6 +19,7 @@ class CreateTranslationsTable extends Migration
             $table->integer('locale_id')->unsigned();
             $table->integer('translation_id')->unsigned()->nullable();
             $table->text('translation');
+            $table->string('slug')->nullable();
 
             $table->foreign('locale_id')->references('id')->on('locales')
                 ->onUpdate('restrict')

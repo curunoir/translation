@@ -24,6 +24,8 @@ class TranslationServiceProvider extends ServiceProvider
         Blade::directive('t', function ($args) {
             return "<?php echo App::make('translationstatic')->translate{$args}; ?>";
         });
+
+        $this->loadMigrationsFrom(__DIR__.'/Migrations');
     }
     /**
      * Register the application services.
@@ -38,9 +40,9 @@ class TranslationServiceProvider extends ServiceProvider
         ], 'config');
 
         // Allow migrations to be publishable.
-        $this->publishes([
+        /*$this->publishes([
             __DIR__.'/Migrations/' => base_path('/database/migrations'),
-        ], 'migrations');
+        ], 'migrations');*/
 
         $this->app->singleton('translationstatic', function ($app) {
             return new TranslationStatic($this->app);
