@@ -23,6 +23,29 @@ class CreateLocalesTable extends Migration
             $table->boolean('activ')->default(1);
             $table->string('iso')->nullable();
         });
+
+        // Default locales
+        DB::table('locales')->insert(
+            array(
+                'code' => 'fr',
+                'lang_code' => NULL,
+                'name' => 'French',
+                'display_name' => 'Français',
+                'activ' => 1,
+                'iso' => 'fr-FR'
+            )
+        );
+
+        DB::table('locales')->insert(
+            array(
+                'code' => 'en',
+                'lang_code' => NULL,
+                'name' => 'English',
+                'display_name' => 'English',
+                'activ' => 1,
+                'iso' => 'en-GB'
+            )
+        );
     }
 
     /**
