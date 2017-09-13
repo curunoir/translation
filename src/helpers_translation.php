@@ -12,9 +12,9 @@ if (!function_exists('_t')) {
      *
      * @return string
      */
-    function _t($text, $toLocale = null)
+    function _t($text, $toLocale = null, $parameters = null)
     {
-        return TranslationStatic::translate($text, $toLocale);
+        return TranslationStatic::translate($text, $toLocale, $parameters);
     }
 }
 

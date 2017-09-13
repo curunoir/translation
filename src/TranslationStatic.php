@@ -56,7 +56,7 @@ class TranslationStatic implements TranslationInterface
      * @param string $lang
      * @return mixed|null|string
      */
-    public function translate($text, $lang = NULL)
+    public function translate($text, $lang = NULL, $parameters = null)
     {
         // Make sure $text is actually a string and not and object / int
         $this->validateText($text);
@@ -86,7 +86,11 @@ class TranslationStatic implements TranslationInterface
             $line = $this->addTrad($text, $lang);
 
         // replace variables
-
+        if (!empty($parameters)):
+            foreach ($parameters as $key => $value):
+                $line = str_replace(':' . $key, $value, $line);
+            endforeach;
+        endif;
         return $line;
     }
 

@@ -31,7 +31,7 @@ interface Translation
      *
      * @return string
      */
-    public function translate($text, $toLocale = NULL);
+    public function translate($text, $toLocale = NULL, $parameters = null);
 
     /**
      * Retrieves the current app's default locale.
