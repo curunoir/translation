@@ -48,10 +48,22 @@ class TranslationServiceProvider extends ServiceProvider
             return new TranslationStatic($this->app);
         });
 
+
         // Bind translation contract to IoC.
         $this->app->bind(TranslationInterface::class, 'translationstatic');
 
+
         // Include the helpers file for global `trad()` function
         include __DIR__.'/helpers_translation.php';
+    }
+
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
+    public function provides()
+    {
+        return ['translationstatic'];
     }
 }

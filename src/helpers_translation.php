@@ -11,7 +11,7 @@ if (!function_exists('_t')) {
      *
      * @return string
      */
-    function _t($text, $toLocale = '')
+    function _t($text, $toLocale = null)
     {
         return App::make('translationstatic')->translate($text, $toLocale);
     }

@@ -7,6 +7,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use curunoir\Translation\Models\Locale;
+use curunoir\Translation\Facades\TranslationStatic;
 
 class TranslationMiddleware
 {
@@ -26,6 +27,13 @@ class TranslationMiddleware
      */
     public function handle($request, Closure $next)
     {
+
+        //$request->cookies->set('locale', $this->app->make('translationstatic')->getRoutePrefix());
+        $lang = TranslationStatic::getRoutePrefix();
+
+        $request->cookies->set('locale', TranslationStatic::getRoutePrefix());
+        TranslationStatic::setLocale(TranslationStatic::getRoutePrefix());
+        /**
         $locale = $request->segment(1);
         if (PHP_SAPI == 'cli' && strpos($_SERVER['argv'][0], 'phpunit') !== FALSE) {
             return $next($request);
@@ -81,7 +89,7 @@ class TranslationMiddleware
         if ($redirect) {
             return $this->redirector->to('/' . $locale);
         }
-
+*/
         return $next($request);
     }
 }
