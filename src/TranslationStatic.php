@@ -52,7 +52,7 @@ class TranslationStatic implements TranslationInterface
      * @param string $lang
      * @return mixed|null|string
      */
-    public function translate($text = '', $lang = '')
+    public function translate($text, $lang = null)
     {
             // Make sure $text is actually a string and not and object / int
             $this->validateText($text);
@@ -96,7 +96,7 @@ class TranslationStatic implements TranslationInterface
     {
         // If DEV environment we don't use encryption
 
-        return \Illuminate\Support\Facades\Cache::remember('translations_dev_' . $lang, 20, function () use ($lang) {
+        return \Illuminate\Support\Facades\Cache::remember('translations' . $lang, 20, function () use ($lang) {
 
             $tmp = \Illuminate\Support\Facades\DB::table('translations');
             if ($lang) {
