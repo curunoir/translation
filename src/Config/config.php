@@ -49,37 +49,21 @@ return [
     ],
 
     /*
-    |--------------------------------------------------------------------------
-    | Clients
-    |--------------------------------------------------------------------------
-    |
-    |  The services providing translation.
-    */
-
-    'clients' => [
-
-        /*
         |--------------------------------------------------------------------------
-        | Translation client
+        | Controllers and prefixes not translated
         |--------------------------------------------------------------------------
         |
-        |  The translation client providing translation service, must implement
-        |  Stevebauman\Translation\Contracts\Client.
+        | Pre
+        | this integer is used to retrieve the segment to retrieve
+        | the locale code from inside the URL.
+        |
+        | For example, if you're wanting to use a URL of `http://website.com/fr`,
+        | You would insert `1`, as the locale is the first segment of the URL.
         |
         */
 
-        'client' => Stevebauman\Translation\Clients\GoogleTranslate::class,
+    'request_segment' => [
 
-        /*
-        |--------------------------------------------------------------------------
-        | Api Key
-        |--------------------------------------------------------------------------
-        |
-        |  If the client requires an API key, enter below.
-        |
-        */
-
-        'api_key' => env('TRANSLATE_API_KEY'),
     ],
 
     /*
@@ -136,6 +120,27 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Untranslatable actions
+    |--------------------------------------------------------------------------
+    |
+    | The Untranslatable actions array is used for not translate some actions
+    |
+    */
+
+    'untranslatable_actions' => [
+        'login',
+        'logout',
+        '_debugbar',
+        'password',
+        'test',
+        'logs',
+        'ajax',
+        'datadevices',
+        'maintenances'
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Default Locale
     |--------------------------------------------------------------------------
     |
@@ -150,7 +155,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Locales
+    | Allowed Locales
     |--------------------------------------------------------------------------
     |
     | The locales array is used for allowing only certain locales to
@@ -159,6 +164,23 @@ return [
     | The list is also used for converting locale codes to locale names.
     |
     | Feel free to add or remove locales you don't need.
+    |
+    */
+
+    'allowed_locales' => [
+        'fr' => 'French',
+        'en' => 'English',
+        'de' => 'German',
+        'it' => 'Italian',
+        'es' => 'Spanish; Castilian',
+        'zh' => 'Chinese',
+    ],
+    /*
+    |--------------------------------------------------------------------------
+    | Locales
+    |--------------------------------------------------------------------------
+    |
+    | The locales array is used for reference
     |
     */
 

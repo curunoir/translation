@@ -28,6 +28,8 @@ class TranslationStatic implements TranslationInterface
     protected   $request;
     private     $cacheTime = 20;
 
+    protected   $app;
+
     /**
      * TranslationStatic constructor.
      * @param Application $app
@@ -36,6 +38,7 @@ class TranslationStatic implements TranslationInterface
     {
         $_instance = [];
 
+        $this->app = $app;
         $this->config  = $app->make('config');
         $this->request = $app->make('request');
 
@@ -45,6 +48,7 @@ class TranslationStatic implements TranslationInterface
 
         $this->setLocale($this->getConfigDefaultLocale()); // From the config file, can be changed by cookie within the middleware
         $this->setCacheTime($this->getConfigCacheTime());
+
     }
 
     /**
@@ -72,7 +76,6 @@ class TranslationStatic implements TranslationInterface
 
         // filters the Collection cache to find the translated $text content
         $res = $cache->filter(function ($t) use ($text) {
-
             return $t->translation == $text;
         })->first();
 
@@ -81,6 +84,8 @@ class TranslationStatic implements TranslationInterface
         // If not found, the $slug will be translated
         if ($line == '')
             $line = $this->addTrad($text, $lang);
+
+        // replace variables
 
         return $line;
     }
@@ -92,8 +97,10 @@ class TranslationStatic implements TranslationInterface
      */
     public function getCacheTrad($lang)
     {
-        if(!isset($this->_instance[$lang]))
+        if(!isset($this->_instance[$lang])) {
             $this->_instance[$lang] = $this->cacheTrad($lang);
+        }
+
         return $this->_instance[$lang];
     }
 
@@ -280,11 +287,9 @@ class TranslationStatic implements TranslationInterface
 
     public function getLocale()
     {
-        if ($this->request->hasCookie('locale')) {
-            return $this->request->cookie('locale');
-        } else {
-            return $this->getConfigDefaultLocale();
-        }
+        if ($this->locale == '')
+            $this->locale = $this->getConfigDefaultLocale();
+        return $this->locale;
     }
 
     public function setLocale($code = '')
@@ -314,6 +319,26 @@ class TranslationStatic implements TranslationInterface
     }
 
     /**
+     * Returns the array of configuration allowed locales.
+     *
+     * @return array
+     */
+    public function getConfigAllowedLocales()
+    {
+        return $this->config->get('translation.allowed_locales');
+    }
+
+    /**
+     * Returns the array of configuration allowed locales.
+     *
+     * @return array
+     */
+    public function getConfigUntranslatableActions()
+    {
+        return $this->config->get('translation.untranslatable_actions');
+    }
+
+    /**
      * Returns a the english name of the locale code entered from the config file.
      *
      * @param string $code
@@ -336,7 +361,7 @@ class TranslationStatic implements TranslationInterface
      *
      * @return int
      */
-    protected function getConfigRequestSegment()
+    public function getConfigRequestSegment()
     {
         return $this->config->get('translation.request_segment', 1);
     }
@@ -358,7 +383,7 @@ class TranslationStatic implements TranslationInterface
      *
      * @return string
      */
-    protected function getConfigDefaultLocale()
+    public function getConfigDefaultLocale()
     {
         return $this->config->get('translation.default_locale', 'fr');
     }
@@ -378,5 +403,12 @@ class TranslationStatic implements TranslationInterface
         return $this->config->get('app.locale');
     }
 
+    public function getRawLocale() {
+        return $this->locale;
+    }
+
+    public function this() {
+        return $this;
+    }
 
 }

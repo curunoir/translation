@@ -27,69 +27,48 @@ class TranslationMiddleware
      */
     public function handle($request, Closure $next)
     {
-
-        //$request->cookies->set('locale', $this->app->make('translationstatic')->getRoutePrefix());
-        $lang = TranslationStatic::getRoutePrefix();
-
-        $request->cookies->set('locale', TranslationStatic::getRoutePrefix());
-        TranslationStatic::setLocale(TranslationStatic::getRoutePrefix());
-        /**
-        $locale = $request->segment(1);
-        if (PHP_SAPI == 'cli' && strpos($_SERVER['argv'][0], 'phpunit') !== FALSE) {
+        if ($request->ajax() || (PHP_SAPI == 'cli' && strpos($_SERVER['argv'][0], 'phpunit')))
             return $next($request);
+
+        $forget = false;
+        $newCookie = false;
+        $routePrefix = TranslationStatic::getRoutePrefix();
+        if ($request->hasCookie('locale')) {
+            $locale = $this->request->cookie('locale');
+            // We change the cookie value if the user changed its url prefix
+            if($routePrefix != $locale) {
+                $forget = true;
+                $locale = $routePrefix;
+            }
         }
-        if ($locale == 'maintenances') {
-            return $next($request);
+        else {
+            $locale = $routePrefix;
+
+            if(in_array($locale, TranslationStatic::getConfigUntranslatableActions()))
+                return $next($request);
+
+            if(!in_array($locale, array_keys(TranslationStatic::getConfigAllowedLocales())))
+                $locale = TranslationStatic::getConfigDefaultLocale();
+            $newCookie = true;
         }
 
-        $redirect = false;
-
-        if ($request->ajax()) {
-            return $next($request);
-        }
-
-        if ($locale != 'login'
-            && $locale != 'logout'
-            && $locale != '_debugbar'
-            && $locale != 'password'
-            && $locale != 'test'
-            && $locale != 'logs'
-            && $locale != 'ajax'
-            && $locale != 'datadevices'
-            && $locale != 'maintenances'
-        ) {
-            if (session('code')):
-
-                $this->app->setLocale(session('code'));
-                return $this->redirector->to('/' . session('code'));
-            else:
-                $locale = substr($request->server('HTTP_ACCEPT_LANGUAGE'), 0, 2);
-                $locales = Locale::pluck('code')->toArray();
-
-                if (in_array($locale, $locales)):
-                    $this->app->setLocale($locale);
-                    return $this->redirector->to('/' . $locale);
-                else:
-                    $this->app->setLocale($locale);
-                    return $this->redirector->to('/' . config('app.locale'));
-                endif;
-            endif;
-        }
-        if ($locale == 'auth' || $locale == 'password'):
-            $locale = substr($request->server('HTTP_ACCEPT_LANGUAGE'), 0, 2);
-            session(['code' => $locale]);
-
-        endif;
-        if (session('code') && session('code') != $locale):
-            session(['code' => $locale]);
-        endif;
-
+        TranslationStatic::setLocale($locale);
         $this->app->setLocale($locale);
 
-        if ($redirect) {
+        $segment = $this->request->segment(TranslationStatic::getConfigRequestSegment());
+
+        if ($request->path() == '/' )
             return $this->redirector->to('/' . $locale);
-        }
-*/
-        return $next($request);
+        else if(!in_array($segment, array_keys(TranslationStatic::getConfigAllowedLocales())))
+            return $this->redirector->to('/' . $locale . '/' . $request->path() );
+
+        // Setting cookie
+        $response = $next($request);
+        if($newCookie)
+            return $response->cookie('locale', $locale, 3600);
+        elseif($forget)
+            return $response->withCookie(\Cookie::forget('locale'));
+        else
+            return $response;
     }
 }

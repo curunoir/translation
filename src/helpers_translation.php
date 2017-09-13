@@ -1,5 +1,6 @@
 <?php
 use Illuminate\Support\Facades\App;
+use curunoir\translation\Facades\TranslationStatic;
 
 if (!function_exists('_t')) {
     /**
@@ -13,6 +14,22 @@ if (!function_exists('_t')) {
      */
     function _t($text, $toLocale = null)
     {
-        return App::make('translationstatic')->translate($text, $toLocale);
+        return TranslationStatic::translate($text, $toLocale);
+    }
+}
+
+if (!function_exists('d')) {
+    /**
+     * Shorthand function for translating text.
+     *
+     * @param string $text
+     * @param array  $replacements
+     * @param string $toLocale
+     *
+     * @return string
+     */
+    function d($var)
+    {
+        dump($var);
     }
 }
