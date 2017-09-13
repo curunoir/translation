@@ -20,9 +20,11 @@ class TranslationStatic extends Model
      */
     protected $table = 'translations';
 
+    protected $primaryKey  = "id";
+
     public function child()
     {
-        return $this->hasMany(self::class);
+        return $this->hasMany(self::class, 'translation_id');
     }
 
     public function scopeLast($query)
@@ -45,7 +47,7 @@ class TranslationStatic extends Model
 
     public function parent()
     {
-        return $this->belongsTo(self::class, $this->getForeignKey());
+        return $this->belongsTo(self::class, 'translation_id');
     }
 
 
