@@ -23,16 +23,21 @@ class TranslationDyn extends Model
         return $this->belongsTo(Locale::class);
     }
 
+    /**
+     * The original word or sentence to be translated
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function source()
     {
         return $this->belongsTo(self::class, 'translationsdyn_id', 'id');
     }
 
+    /**
+     * @param $data
+     */
     public static function add($data)
     {
-
         if (!isset($data['content']) || !isset($data['model']) || !isset($data['object_id'])):
-
             return dd('Error Field Translation Dyn');
         endif;
         $content = $data['content'];
@@ -51,15 +56,15 @@ class TranslationDyn extends Model
         $trans->save();
     }
 
+    /**
+     * @param $data
+     * @param bool $localTrad
+     * @return mixed|null
+     */
     public static function getOne($data, $localTrad = false)
     {
         if (!isset($_instance['transDyn'])):
-            if (!env('DEV')):
-                $tc = collect(json_decode(self::getFileCrypt('translationsdyn')));
-                $_instance['transDyn'] = $tc;
-            else:
-                $_instance['transDyn'] = self::get();
-            endif;
+            $_instance['transDyn'] = self::get();
         endif;
         $tmp = $_instance['transDyn'];
         $trans = null;
@@ -90,7 +95,12 @@ class TranslationDyn extends Model
         return null;
     }
 
-    public static function getAllTrad($data, $localTrad = false)
+    /**
+     * @param $data
+     * @param bool $localTrad
+     * @return array
+     */
+    public static function getAll($data, $localTrad = false)
     {
         $tmp = [];
         foreach (Locale::getAll() as $l):

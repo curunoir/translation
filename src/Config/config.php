@@ -49,24 +49,6 @@ return [
     ],
 
     /*
-        |--------------------------------------------------------------------------
-        | Controllers and prefixes not translated
-        |--------------------------------------------------------------------------
-        |
-        | Pre
-        | this integer is used to retrieve the segment to retrieve
-        | the locale code from inside the URL.
-        |
-        | For example, if you're wanting to use a URL of `http://website.com/fr`,
-        | You would insert `1`, as the locale is the first segment of the URL.
-        |
-        */
-
-    'request_segment' => [
-
-    ],
-
-    /*
     |--------------------------------------------------------------------------
     | Request Segment
     |--------------------------------------------------------------------------
@@ -116,7 +98,7 @@ return [
     |
     */
 
-    'cache_time' => 0,
+    'cache_time' => 20,
 
     /*
     |--------------------------------------------------------------------------

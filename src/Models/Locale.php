@@ -25,13 +25,21 @@ class Locale extends Model
     /**
      * {@inheritdoc].
      */
-    public function translations()
+    public function translationsStatic()
     {
         return $this->hasMany(TranslationStatic::class);
     }
 
+    /**
+     * {@inheritdoc].
+     */
+    public function translationsDyn()
+    {
+        return $this->hasMany(TranslationDyn::class);
+    }
+
     public function getIsoDateAttribute(){
-        return str_replace('-','_',$this->iso).'.utf-8';
+        return str_replace('-', '_', $this->iso).'.utf-8';
     }
 
     public static function getAll(){
@@ -41,10 +49,10 @@ class Locale extends Model
         return self::$_instance['all'];
     }
 
-    public static function getWithCode($code=null){
+    public static function getWithCode($code = null){
         $code = $code ? $code : session('code');
         if(!isset(self::$_instance[$code])){
-            self::$_instance[$code] = self::where('code',$code)->first();
+            self::$_instance[$code] = self::where('code', $code)->first();
         }
 
         return self::$_instance[$code];
@@ -52,7 +60,7 @@ class Locale extends Model
 
     public static function current(){
         if(!isset(self::$_instance['current'])){
-            self::$_instance['current'] = self::where('code',session('code'))->first();
+            self::$_instance['current'] = self::where('code', session('code'))->first();
         }
         return self::$_instance['current'];
     }
