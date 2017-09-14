@@ -10,6 +10,8 @@ namespace curunoir\translation\Behaviour;
 
 use curunoir\translation\Models\TranslationDyn;
 use curunoir\translation\Facades\TranslationDyn as TransDynFacade;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
 
 /**
  * Trait TranslatableModel
@@ -61,7 +63,8 @@ trait TranslatableModel
      */
     public function getTrad($params)
     {
-        $params['locale_id'] = isset($params['locale_id']) ? $params['locale_id'] : TransDynFacade::getConfigDefaultLocaleId();
+
+        $params['locale_id'] = isset($params['locale_id']) ? $params['locale_id'] : TransDynFacade::getLocaleIdByCode(App::getLocale());
         $params['model'] = explode('\\', get_class())[2];
 
         if ($this->id)
@@ -76,10 +79,12 @@ trait TranslatableModel
 
         $model = get_class();
 
+        // no translation found, we search within models themselves
         $noTrad = $model::find($params['object_id']);
-
-        if ($noTrad && $noTrad->{$params['field']})
-            return $noTrad->{$params['field']};
+        $arraynoTrad = $noTrad->toArray();
+        
+        if ($noTrad)
+            return $arraynoTrad[$params['field']];
     }
 
 
