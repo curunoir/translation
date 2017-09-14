@@ -225,26 +225,6 @@ class TranslationStatic implements TranslationInterface
     }
 
 
-    //////////////////////////////////////////////// From Steve Bauman package
-
-    /**
-     * Retrieves or creates a locale from the specified code.
-     *
-     * @param string $code
-     *
-     * @return Model
-     */
-    protected function firstOrCreateLocale($code)
-    {
-        $name = $this->getConfigLocaleByCode($code);
-        $locale = $this->localeModel->firstOrCreate([
-            'code' => $code,
-            'name' => $name,
-            'activ' => 1
-        ]);
-        return $locale;
-    }
-
     /**
      * Returns the translation model from the configuration.
      *
