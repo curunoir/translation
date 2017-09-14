@@ -77,7 +77,8 @@ class TranslationDyn extends Model
                 ->whereNotNull('content')
                 ->first();
 
-            if ($transLocal) return $transLocal->content;
+            if ($transLocal)
+                return $transLocal->content;
         endif;
         $trans = $tmp->filter(function ($item) use ($data) {
             if ($item->locale_id == $data['locale_id'] &&

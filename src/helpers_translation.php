@@ -1,5 +1,5 @@
 <?php
-use Illuminate\Support\Facades\App;
+
 use curunoir\translation\Facades\TranslationStatic;
 
 if (!function_exists('_t')) {

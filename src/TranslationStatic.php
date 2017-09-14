@@ -10,9 +10,11 @@ use curunoir\translation\Contracts\Translation as TranslationInterface;
 use curunoir\translation\Models\Locale;
 use InvalidArgumentException;
 use Stichoza\GoogleTranslate\TranslateClient;
+use curunoir\translation\Behaviour\LocaleHandler;
 
 class TranslationStatic implements TranslationInterface
 {
+    use LocaleHandler;
 
     /*
      * Array of Collections of objects
@@ -21,14 +23,10 @@ class TranslationStatic implements TranslationInterface
      */
     private     $_instance = [];
 
-    protected   $locale = '';
     protected   $localeModel;
     protected   $translationModel;
-    protected   $config;
-    protected   $request;
     private     $cacheTime = 20;
 
-    protected   $app;
 
     /**
      * TranslationStatic constructor.
@@ -38,7 +36,7 @@ class TranslationStatic implements TranslationInterface
     {
         $_instance = [];
 
-        $this->app = $app;
+        // config, locale, request are defined in LocaleHandler trait
         $this->config  = $app->make('config');
         $this->request = $app->make('request');
 
@@ -288,50 +286,6 @@ class TranslationStatic implements TranslationInterface
         return true;
     }
 
-
-    public function getLocale()
-    {
-        if ($this->locale == '')
-            $this->locale = $this->getConfigDefaultLocale();
-        return $this->locale;
-    }
-
-    public function setLocale($code = '')
-    {
-        $this->locale = $code;
-    }
-
-    public function getRoutePrefix()
-    {
-        $locale = $this->request->segment($this->getConfigRequestSegment());
-
-        $locales = $this->getConfigLocales();
-
-        if (is_array($locales) && in_array($locale, array_keys($locales))) {
-            return $locale;
-        }
-    }
-
-    /**
-     * Returns the array of configuration locales.
-     *
-     * @return array
-     */
-    protected function getConfigLocales()
-    {
-        return $this->config->get('translation.locales');
-    }
-
-    /**
-     * Returns the array of configuration allowed locales.
-     *
-     * @return array
-     */
-    public function getConfigAllowedLocales()
-    {
-        return $this->config->get('translation.allowed_locales');
-    }
-
     /**
      * Returns the array of configuration allowed locales.
      *
@@ -340,34 +294,6 @@ class TranslationStatic implements TranslationInterface
     public function getConfigUntranslatableActions()
     {
         return $this->config->get('translation.untranslatable_actions');
-    }
-
-    /**
-     * Returns a the english name of the locale code entered from the config file.
-     *
-     * @param string $code
-     *
-     * @return string
-     */
-    protected function getConfigLocaleByCode($code)
-    {
-        $locales = $this->getConfigLocales();
-
-        if (is_array($locales) && array_key_exists($code, $locales)) {
-            return $locales[$code];
-        }
-
-        return $code;
-    }
-
-    /**
-     * Returns the request segment to retrieve the locale from.
-     *
-     * @return int
-     */
-    public function getConfigRequestSegment()
-    {
-        return $this->config->get('translation.request_segment', 1);
     }
 
     /**
@@ -383,16 +309,6 @@ class TranslationStatic implements TranslationInterface
     }
 
     /**
-     * Returns the default locale from the configuration.
-     *
-     * @return string
-     */
-    public function getConfigDefaultLocale()
-    {
-        return $this->config->get('translation.default_locale', 'fr');
-    }
-
-    /**
      * Returns the cache time set from the configuration file.
      *
      * @return string|int
@@ -400,19 +316,6 @@ class TranslationStatic implements TranslationInterface
     protected function getConfigCacheTime()
     {
         return $this->config->get('translation.cache_time', $this->cacheTime);
-    }
-
-    public function getAppLocale()
-    {
-        return $this->config->get('app.locale');
-    }
-
-    public function getRawLocale() {
-        return $this->locale;
-    }
-
-    public function this() {
-        return $this;
     }
 
 }
