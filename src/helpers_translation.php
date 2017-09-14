@@ -1,6 +1,7 @@
 <?php
 
 use curunoir\translation\Facades\TranslationStatic;
+use curunoir\translation\Facades\TranslationDyn;
 
 if (!function_exists('_t')) {
     /**
@@ -32,4 +33,8 @@ if (!function_exists('d')) {
     {
         dump($var);
     }
+}
+
+function testDyn($text) {
+    return TranslationDyn::translate("salut");
 }

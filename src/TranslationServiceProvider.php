@@ -39,18 +39,18 @@ class TranslationServiceProvider extends ServiceProvider
             __DIR__.'/Config/config.php' => config_path('translation.php'),
         ], 'config');
 
-        // Allow migrations to be publishable.
-        /*$this->publishes([
-            __DIR__.'/Migrations/' => base_path('/database/migrations'),
-        ], 'migrations');*/
-
+        // Static translation service
         $this->app->singleton('translationstatic', function ($app) {
             return new TranslationStatic($this->app);
         });
 
+        // Dynamic translation service
+        $this->app->singleton('translationdyn', function ($app) {
+            return new TranslationDyn($this->app);
+        });
 
         // Bind translation contract to IoC.
-        $this->app->bind(TranslationInterface::class, 'translationstatic');
+        $this->app->bind(TranslationInterface::class, 'translation');
 
 
         // Include the helpers file for global `trad()` function

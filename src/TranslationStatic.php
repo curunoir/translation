@@ -11,10 +11,12 @@ use curunoir\translation\Models\Locale;
 use InvalidArgumentException;
 use Stichoza\GoogleTranslate\TranslateClient;
 use curunoir\translation\Behaviour\LocaleHandler;
+use curunoir\translation\Behaviour\CacheHandler;
 
 class TranslationStatic implements TranslationInterface
 {
     use LocaleHandler;
+    use CacheHandler;
 
     /*
      * Array of Collections of objects
@@ -22,11 +24,8 @@ class TranslationStatic implements TranslationInterface
      * The objects of the Collections are database translations with 'content' and 'translation' fields
      */
     private     $_instance = [];
-
     protected   $localeModel;
     protected   $translationModel;
-    private     $cacheTime = 20;
-
 
     /**
      * TranslationStatic constructor.
@@ -34,7 +33,7 @@ class TranslationStatic implements TranslationInterface
      */
     public function __construct(Application $app)
     {
-        $_instance = [];
+        $this->_instance = [];
 
         // config, locale, request are defined in LocaleHandler trait
         $this->config  = $app->make('config');
@@ -247,16 +246,6 @@ class TranslationStatic implements TranslationInterface
     }
 
     /**
-     * Returns the locale model from the configuration.
-     *
-     * @return string
-     */
-    protected function getConfigLocaleModel()
-    {
-        return $this->config->get('translation.models.locale', Models\Locale::class);
-    }
-
-    /**
      * Returns the translation model from the configuration.
      *
      * @return string
@@ -294,28 +283,6 @@ class TranslationStatic implements TranslationInterface
     public function getConfigUntranslatableActions()
     {
         return $this->config->get('translation.untranslatable_actions');
-    }
-
-    /**
-     * Sets the time to store the translations and locales in cache.
-     *
-     * @param int $time
-     */
-    protected function setCacheTime($time)
-    {
-        if (is_numeric($time)) {
-            $this->cacheTime = $time;
-        }
-    }
-
-    /**
-     * Returns the cache time set from the configuration file.
-     *
-     * @return string|int
-     */
-    protected function getConfigCacheTime()
-    {
-        return $this->config->get('translation.cache_time', $this->cacheTime);
     }
 
 }
