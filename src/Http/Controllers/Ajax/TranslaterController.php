@@ -19,47 +19,6 @@ class TranslaterController extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
-     * @return mixed
-     */
-    public function postQuickUpdate()
-    {
-        $inputs = Input::all();
-        $model = $name_model = $inputs['model'];
-        if (!isset($inputs['exception'])) {
-            $m = "App\\Models\\" . $model;
-        } else {
-            $m = "curunoir\\translation\\Models\\Locale";
-        }
-
-        if (isset($inputs['locale_id'])):
-            $model = $m::where($inputs['column'], $inputs['pk'])
-                ->where('locale_id', $inputs['locale_id'])
-                ->first();
-        elseif (isset($inputs['lang'])):
-            $locale_id = Locale::where('code', session('code'))->first()->id;
-            $params = [
-                'model' => $name_model,
-                'locale_id' => $locale_id,
-                'field' => 'title',
-                'object_id' => $inputs['pk'],
-                'content' => $inputs['value']
-            ];
-            $model = TransDynService::addTrad($params);
-            return $model;
-        else:
-            $model = $m::find($inputs['pk']);
-        endif;
-
-        if ($name_model == "Setting") {
-            Cache::forget('settings');
-        }
-
-        $model->{$inputs['name']} = $inputs['value'];
-        $model->save();
-        return $model;
-    }
-
-    /**
      * Get a translation from google client
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
