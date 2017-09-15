@@ -26,6 +26,9 @@ class TranslationServiceProvider extends ServiceProvider
         });
 
         $this->loadMigrationsFrom(__DIR__.'/Migrations');
+
+        // Load routes for the Ajax Google translation controller
+        $this->loadRoutesFrom(__DIR__.'/Http/routes.php');
     }
     /**
      * Register the application services.
